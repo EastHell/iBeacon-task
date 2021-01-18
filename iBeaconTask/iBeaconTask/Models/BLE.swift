@@ -33,8 +33,10 @@ class BLEContainer: NSObject, IBLEContainer, CBCentralManagerDelegate {
     }()
     
     var ble: [BLE] = []
+    var timer: Timer?
     
     deinit {
+        timer?.invalidate()
         centralManager.stopScan()
     }
     
@@ -42,14 +44,21 @@ class BLEContainer: NSObject, IBLEContainer, CBCentralManagerDelegate {
         switch central.state {
         case .poweredOn:
             centralManager.scanForPeripherals(withServices: nil, options: nil)
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] _ in
+                self?.delegate?.update()
+            })
         default:
             print("Bluetooth not powered on")
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        ble.append(BLE(peripheral: peripheral, rssi: RSSI))
-        delegate?.update()
+        if let index = ble.firstIndex(where: { $0.peripheral.name == peripheral.name }) {
+            ble[index].peripheral = peripheral
+            ble[index].rssi = RSSI
+        } else {
+            ble.append(BLE(peripheral: peripheral, rssi: RSSI))
+        }
     }
     
     func reload() {

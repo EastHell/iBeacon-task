@@ -20,7 +20,8 @@ class PerviousViewController: UIViewController {
     }()
     
     @objc func bleButtonPressed(sender: UIButton) {
-        navigationController?.pushViewController(UIViewController(), animated: true)
+        let bleVC = BLETableViewController(bleContainer: BLEContainer())
+        navigationController?.pushViewController(bleVC, animated: true)
     }
     
     let beaconButton: UIButton = {

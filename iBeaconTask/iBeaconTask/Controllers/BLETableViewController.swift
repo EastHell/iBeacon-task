@@ -33,10 +33,13 @@ class BLETableViewController: UITableViewController, BLEContainerDelegate {
         refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
         bleContainer.delegate = self
+        
+        refresh()
     }
     
     @objc func refresh() {
         bleContainer.reload()
+        refreshControl?.endRefreshing()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,7 +47,7 @@ class BLETableViewController: UITableViewController, BLEContainerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath) as! BLETableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BLECellIdentifier", for: indexPath) as! BLETableViewCell
 
         let ble = bleContainer.ble.sorted(by: { $0.rssi.intValue > $1.rssi.intValue })[indexPath.row]
         
@@ -55,6 +58,8 @@ class BLETableViewController: UITableViewController, BLEContainerDelegate {
     }
     
     func update() {
+        tableView.beginUpdates()
         tableView.reloadData()
+        tableView.endUpdates()
     }
 }
