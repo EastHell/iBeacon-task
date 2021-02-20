@@ -10,7 +10,9 @@ import CoreLocation
 
 protocol IBeaconsContainer {
     var delegate: BeaconsContainerDelegate? { get set }
-    var beacons: [CLBeacon] { get }
+    var beacons: [CLProximity: [CLBeacon]] { get }
+    func startScanning()
+    func stopScanning()
 }
 
 protocol BeaconsContainerDelegate {
@@ -21,33 +23,67 @@ class BeaconsContainer: NSObject, IBeaconsContainer, CLLocationManagerDelegate {
     
     var delegate: BeaconsContainerDelegate?
     
-    private let locationManager = CLLocationManager()
-    var beacons: [CLBeacon] = []
+    private static let locationManager = CLLocationManager()
+    private let region: CLBeaconRegion
     
-    override init() {
+    var beacons = [CLProximity : [CLBeacon]]()
+    
+    init(uuid: UUID) {
+        self.region = CLBeaconRegion(proximityUUID: uuid, identifier: uuid.uuidString)
         super.init()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
+        configure()
+    }
+    
+    init(uuid: UUID, major: NSNumber) {
+        self.region = CLBeaconRegion(proximityUUID: uuid, major: major.uint16Value, identifier: uuid.uuidString)
+        super.init()
+        configure()
+    }
+    
+    init(uuid: UUID, major: NSNumber, minor: NSNumber) {
+        self.region = CLBeaconRegion(proximityUUID: uuid, major: major.uint16Value, minor: minor.uint16Value, identifier: uuid.uuidString)
+        super.init()
+        configure()
+    }
+    
+    func configure() {
+        BeaconsContainer.locationManager.delegate = self
+        BeaconsContainer.locationManager.requestWhenInUseAuthorization()
+    }
+    
+    deinit {
+        BeaconsContainer.locationManager.stopRangingBeacons(in: region)
+        BeaconsContainer.locationManager.stopMonitoring(for: region)
     }
     
     func startScanning() {
-        let uuid = UUID()
-        let beaconRegion = CLBeaconRegion(proximityUUID: uuid, major: 123, minor: 123, identifier: "iBeacon finder")
-        
-        locationManager.startMonitoring(for: beaconRegion)
-        locationManager.startRangingBeacons(in: beaconRegion)
+        BeaconsContainer.locationManager.startMonitoring(for: region)
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self), CLLocationManager.isRangingAvailable() {
-                startScanning()
+    func stopScanning() {
+        beacons.removeAll()
+        BeaconsContainer.locationManager.stopRangingBeacons(in: region)
+        BeaconsContainer.locationManager.stopMonitoring(for: region)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
+        
+        self.beacons.removeAll()
+        
+        for range in [CLProximity.unknown, .immediate, .near, .far] {
+            let proximityBeacons = beacons.filter { $0.proximity == range }
+            if !proximityBeacons.isEmpty {
+                self.beacons[range] = proximityBeacons
             }
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
-        self.beacons = beacons.sorted{ $0.accuracy < $1.accuracy }
-        delegate?.update()
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
+        let beaconRegion = region as! CLBeaconRegion
+        if state == .inside {
+            manager.startRangingBeacons(in: beaconRegion)
+        } else {
+            manager.stopRangingBeacons(in: beaconRegion)
+        }
     }
 }

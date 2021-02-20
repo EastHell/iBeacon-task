@@ -19,6 +19,7 @@
 		1FD5ED6F25B0955B00591526 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5ED6E25B0955B00591526 /* ViewController.swift */; };
 		1FD5ED7425B0955B00591526 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FD5ED7325B0955B00591526 /* Assets.xcassets */; };
 		1FD5ED7725B0955B00591526 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD5ED7525B0955B00591526 /* LaunchScreen.storyboard */; };
+		83512D9025DAE58300E14A59 /* SetUUIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83512D8F25DAE58300E14A59 /* SetUUIDViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		1FD5ED7325B0955B00591526 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1FD5ED7625B0955B00591526 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1FD5ED7825B0955B00591526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		83512D8F25DAE58300E14A59 /* SetUUIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUUIDViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				1F781DEE25B0B0A10090FE42 /* IBeaconsTableViewController.swift */,
 				1F781DF525B448C30090FE42 /* iBeaconViewController.swift */,
 				1F781DF925B5B13F0090FE42 /* BLETableViewController.swift */,
+				83512D8F25DAE58300E14A59 /* SetUUIDViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -136,11 +139,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Aleksandr Shushkov";
 				TargetAttributes = {
 					1FD5ED6825B0955B00591526 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -188,6 +192,7 @@
 				1FD5ED6D25B0955B00591526 /* AppDelegate.swift in Sources */,
 				1F781DF425B0C2B80090FE42 /* iBeaconTableViewCell.swift in Sources */,
 				1F781DF625B448C30090FE42 /* iBeaconViewController.swift in Sources */,
+				83512D9025DAE58300E14A59 /* SetUUIDViewController.swift in Sources */,
 				1F781DF825B5A4870090FE42 /* BLE.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,6 +237,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -293,6 +299,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -335,7 +342,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aleksandrshuskov.iBeaconTask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -353,7 +360,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.aleksandrshuskov.iBeaconTask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
