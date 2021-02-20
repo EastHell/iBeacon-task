@@ -12,9 +12,6 @@ import CoreLocation
 class iBeaconViewController: UIViewController, BeaconsContainerDelegate {
     
     var beaconsContainer: IBeaconsContainer
-    var uuid: UUID
-    var major: NSNumber
-    var minor: NSNumber
     
     var majorLabel: UILabel = {
         var majorLabel = UILabel()
@@ -40,10 +37,7 @@ class iBeaconViewController: UIViewController, BeaconsContainerDelegate {
         return accuracyLabel
     }()
     
-    init(uuid: UUID, major: NSNumber, minor: NSNumber, beaconsContainer: IBeaconsContainer) {
-        self.uuid = uuid
-        self.major = major
-        self.minor = minor
+    init(beaconsContainer: IBeaconsContainer) {
         self.beaconsContainer = beaconsContainer
         super.init(nibName: nil, bundle: nil)
     }
@@ -80,29 +74,41 @@ class iBeaconViewController: UIViewController, BeaconsContainerDelegate {
             ])
         
         
-        navigationItem.title = uuid.uuidString
-        majorLabel.text = "major: \(major.intValue)"
-        minorLabel.text = "minooor: \(minor.intValue)"
-        if let beacon = beaconsContainer.beacons.first(where: { $0.proximityUUID == uuid && $0.major == major && $0.minor == minor }) {
-            rssiLabel.text = "rssi: \(beacon.rssi)"
-            accuracyLabel.text = "accuracy: \(beacon.accuracy)"
-        } else {
-            rssiLabel.text = "rssi: No data available"
-            accuracyLabel.text = "accuracy: No data available"
-        }
+        setParameters(uuid: nil, major: nil, minor: nil, rssi: nil, accuracy: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         beaconsContainer.delegate = self
+        beaconsContainer.startScanning()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        beaconsContainer.stopScanning()
     }
     
     func update() {
-        if let beacon = beaconsContainer.beacons.first(where: { $0.proximityUUID == uuid && $0.major == major && $0.minor == minor }) {
-            rssiLabel.text = "rssi: \(beacon.rssi)"
-            accuracyLabel.text = "accuracy: \(beacon.accuracy)"
+        if let beacon = beaconsContainer.beacons.values.first?.first {
+            setParameters(uuid: beacon.proximityUUID, major: beacon.major, minor: beacon.minor, rssi: beacon.rssi, accuracy: beacon.accuracy)
         } else {
+            setParameters(uuid: nil, major: nil, minor: nil, rssi: nil, accuracy: nil)
+        }
+    }
+    
+    func setParameters(uuid: UUID?, major: NSNumber?, minor: NSNumber?, rssi: Int?, accuracy: CLLocationAccuracy?) {
+        if let uuid = uuid, let major = major, let minor = minor, let rssi = rssi, let accuracy = accuracy {
+            navigationItem.title = "UUID: \(uuid.uuidString)"
+            majorLabel.text = "major: \(major.uint16Value)"
+            minorLabel.text = "minor: \(minor.uint16Value)"
+            rssiLabel.text = "rssi: \(rssi)"
+            accuracyLabel.text = "accuracy: \(accuracy)"
+        } else {
+            navigationItem.title = "UUID: No data available"
+            majorLabel.text = "major: No data available"
+            minorLabel.text = "minor: No data available"
             rssiLabel.text = "rssi: No data available"
             accuracyLabel.text = "accuracy: No data available"
         }

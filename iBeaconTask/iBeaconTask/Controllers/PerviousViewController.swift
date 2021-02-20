@@ -13,7 +13,7 @@ class PerviousViewController: UIViewController {
     let BLEButton: UIButton = {
         let bleButton = UIButton()
         bleButton.setTitle("BLE devices", for: .normal)
-        bleButton.setTitleColor(.black, for: .normal)
+        bleButton.setTitleColor(.systemBlue, for: .normal)
         bleButton.translatesAutoresizingMaskIntoConstraints = false
         bleButton.addTarget(self, action: #selector(bleButtonPressed), for: .touchUpInside)
         return bleButton
@@ -27,14 +27,15 @@ class PerviousViewController: UIViewController {
     let beaconButton: UIButton = {
         let beaconButton = UIButton()
         beaconButton.setTitle("iBeacons", for: .normal)
-        beaconButton.setTitleColor(.black, for: .normal)
+        beaconButton.setTitleColor(.systemBlue, for: .normal)
         beaconButton.translatesAutoresizingMaskIntoConstraints = false
         beaconButton.addTarget(self, action: #selector(beaconButtonPressed), for: .touchUpInside)
         return beaconButton
     }()
     
     @objc func beaconButtonPressed(sender: UIButton) {
-        let iBeaconsVC = IBeaconsTableViewController(beaconsCoontainer: BeaconsContainer())
+        //let iBeaconsVC = IBeaconsTableViewController(beaconsCoontainer: BeaconsContainer())
+        let iBeaconsVC = SetUUIDViewController()
         navigationController?.pushViewController(iBeaconsVC, animated: true)
     }
     
